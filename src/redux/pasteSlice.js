@@ -27,14 +27,16 @@ export const pasteSlice = createSlice({
     },
 
     updateToPaste: (state,action) => {
+      console.log("update?")
       const paste = action.payload;
-      const index = state.pastes.findIndex((item) => item.id === paste.id);
+      const index = state.pastes.findIndex((item) => item._id === paste._id);
 
       if(index >=0){
-        state.pastes(index)=paste;
+        state.pastes[index]=paste;
         localStorage.setItem("pastes" , JSON.stringify(state.pastes));
 
         toast.success("Paste Updated");
+        console.log("updated ?")
       }
     },
 
@@ -44,14 +46,15 @@ export const pasteSlice = createSlice({
     },
      removeFromPaste: (state, action) => {
       const pasteId = action.payload;
-
-      const index = state.pastes.findIndex((item) => item.id === pasteId)
+     console.log("paste delete ?")
+      const index = state.pastes.findIndex((item) => item._id === pasteId)
 
       if(index >=0){
         state.pastes.splice(index,1);
         localStorage.setItem("pastes", JSON.stringify(state.pastes));
 
         toast.success("paste deleted");
+        console.log("paste deleted ?")
       }
     },
   },

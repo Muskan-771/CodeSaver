@@ -1,6 +1,6 @@
-import React, { useState  } from 'react'
+import React, { useEffect, useState  } from 'react'
 import {useSearchParams } from "react-router-dom"
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { addToPastes, updateToPaste } from '../redux/pasteSlice';
 import toast, { Toaster } from 'react-hot-toast';
 
@@ -10,7 +10,8 @@ const Home = () => {
   const [value, setValue] = useState('');
   const [searchParams , setSearchParams] = useSearchParams();
   const pasteId = searchParams.get("pasteId")
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
+  const allPastes = useSelector((state) => state.paste.pastes)
 
    function handleClick(e){
         if(title == ""){
@@ -21,13 +22,23 @@ const Home = () => {
         }
    }
 
+   useEffect(() => {
+    if(pasteId){
+      const paste = allPastes.find((p) => p._id === pasteId)
+      setTitle(paste.title);
+      setValue(paste.content);
+    }
+     
+   }, [pasteId])
+   
+
 
    function pleaseCreate(){
     toast.error("please create the paste")
    }
 
   function createPaste(e){
-    e.preventDefault();
+  
     const paste = {
         title : title,
         content : value,
@@ -51,42 +62,87 @@ const Home = () => {
 }
 
   return (
-  <div>
-      <div className='flex flex-row gap-7 place-content-between'>
+  // <div>
+  //     <div className='flex flex-row gap-7 place-content-between'>
+  //     <input
+  //       className='p-1 rounded-2xl mt-2 w-[66%] pl-4'
+  //       type="text"
+  //       placeholder=' enter title here'
+  //       value={title} onChange={(e) => setTitle(e.target.value)} 
+  //     />
+
+  //     <button 
+  //      onClick={handleClick}
+  //     className='p-2 rounded-2xl mt-2 bg-black text-white'>
+  //       {
+  //         pasteId ? "Update My Paste" : "Create My Paste"
+  //       }
+  //     </button>
+  //   </div>
+
+  //   <div className='mt-9 bg-black rounded-2xl'>
+  //     <textarea 
+  //         className=' rounded 2xl mt-4 p-4  min-w-[500px]'
+  //         value={value}
+  //         placeholder=' enter content here'
+  //         onChange={(e) => setValue(e.target.value)}
+  //         rows={20}
+      
+  //     />
+  //   </div>
+  // </div>
+
+
+
+  <div className="min-h-screen bg-gradient-to-br from-teal-100 via-white to-blue-100 p-6 font-sans">
+  <div className="max-w-4xl mx-auto bg-white/60 backdrop-blur-md rounded-3xl shadow-2xl p-8">
+    <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center text-gray-800 drop-shadow-md">
+      📝 {pasteId ? "Update Your Paste" : "Create a New Paste"}
+    </h1>
+
+    {/* Input & Button Row */}
+    <div className="flex flex-col md:flex-row gap-6 md:justify-between">
       <input
-        className='p-1 rounded-2xl mt-2 w-[66%] pl-4'
+        className="flex-1 p-3 rounded-xl bg-white/90 border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-400"
         type="text"
-        placeholder=' enter title here'
-        value={title} onChange={(e) => setTitle(e.target.value)} 
+        placeholder="Enter title here"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
       />
 
-      <button 
-       onClick={handleClick}
-      className='p-2 rounded-2xl mt-2 bg-black text-white'>
-        {
-          pasteId ? "Update My Paste" : "Create My Paste"
-        }
+      <button
+        onClick={handleClick}
+        className="px-6 py-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-black font-semibold transition-all duration-200 shadow-md hover:shadow-lg"
+      >
+        {pasteId ? "🔄 Update Paste" : "✨ Create Paste"}
       </button>
     </div>
 
-    <div className='mt-9 bg-black rounded-2xl'>
-      <textarea 
-          className=' rounded 2xl mt-4 p-4  min-w-[500px]'
-          value={value}
-          placeholder=' enter content here'
-          onChange={(e) => setValue(e.target.value)}
-          rows={20}
-      
+    {/* Textarea */}
+    <div className="mt-8">
+      <textarea
+        className="w-full min-h-[300px] p-4 rounded-xl bg-white/90 border border-gray-300 text-gray-800 placeholder:text-gray-500 focus:outline-none focus:ring-2 focus:ring-teal-400 transition-all resize-none"
+        value={value}
+        onChange={(e) => setValue(e.target.value)}
+        placeholder="Enter content here..."
+        rows={15}
       />
     </div>
   </div>
+</div>
+
+
+
+
+  
 
 
 
 
 
 
-  // styling using chatgpt
+
+  // styling 
 
 
 
