@@ -2,6 +2,7 @@ import React, { useState  } from 'react'
 import {useSearchParams } from "react-router-dom"
 import { useDispatch } from 'react-redux';
 import { addToPastes, updateToPaste } from '../redux/pasteSlice';
+import toast, { Toaster } from 'react-hot-toast';
 
 
 const Home = () => {
@@ -11,6 +12,19 @@ const Home = () => {
   const pasteId = searchParams.get("pasteId")
   const dispatch = useDispatch()
 
+   function handleClick(e){
+        if(title == ""){
+          pleaseCreate();
+        }
+        else{
+          createPaste();
+        }
+   }
+
+
+   function pleaseCreate(){
+    toast.error("please create the paste")
+   }
 
   function createPaste(e){
     e.preventDefault();
@@ -47,7 +61,7 @@ const Home = () => {
       />
 
       <button 
-       onClick={createPaste}
+       onClick={handleClick}
       className='p-2 rounded-2xl mt-2 bg-black text-white'>
         {
           pasteId ? "Update My Paste" : "Create My Paste"
